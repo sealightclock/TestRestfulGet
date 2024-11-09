@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
         // Tests
 
-        val userFromNetwork = UserFromNetwork()
+        /*val userFromNetwork = UserFromNetwork()
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             val jsonString = userFromNetwork.getUserData()
 
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
             for (user in users) {
                 Log.v(TAG, "onResume: user=[${user.name}, ${user.photo}")
             }
-        }
+        }*/
     }
 }
 

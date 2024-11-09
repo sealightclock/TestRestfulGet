@@ -1,8 +1,13 @@
 package com.example.jonathan.testrestfulget
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -28,6 +33,23 @@ class UserRepository {
             User("User1", "user1.jpg"),
             User("User2", "user2.jpg")
         )
+    }
+
+    fun getUsersFromNetwork(): List<User> {
+        Log.d(TAG, "UserRepository: getUsersFromNetwork")
+
+
+        val userFromNetwork = UserFromNetwork()
+        val jsonString = userFromNetwork.getUserData()
+
+        val gsonUtil = GsonUtil()
+        val users = gsonUtil.fromJsonToDataClass2(jsonString)
+
+        for (user in users) {
+            Log.v(TAG, "getUsersFromNetwork: user=[${user.name}, ${user.photo}")
+        }
+
+        return users
     }
 }
 

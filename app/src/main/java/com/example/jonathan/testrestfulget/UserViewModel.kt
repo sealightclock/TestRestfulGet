@@ -2,6 +2,7 @@ package com.example.jonathan.testrestfulget
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -20,8 +21,12 @@ class UserViewModel : ViewModel() {
     }
 
     private fun loadDataFromRepository() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             users = repository.getUsers()
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            users = repository.getUsersFromNetwork()
         }
     }
 }
