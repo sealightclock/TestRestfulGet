@@ -19,7 +19,7 @@ fun UserItemView(user: User) {
         )
 
         Text(
-            text = user.icon
+            text = user.photo
         )
     }
 }
