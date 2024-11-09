@@ -5,12 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewModelScope
-import com.example.jonathan.testrestfulget.ui.theme.TestRestfulGetTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -26,9 +21,11 @@ class MainActivity : ComponentActivity() {
 
         //enableEdgeToEdge()
 
-        // Create ViewModel
-        //val viewModel: UserViewModel by viewModels()
-
+        // Refresh ViewModeL:
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            viewModel.loadDataFromRepository()
+        }
+        
         setContent {
             /*TestRestfulGetTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -48,20 +45,6 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "onResume")
 
         super.onResume()
-
-        // Tests
-
-        /*val userFromNetwork = UserFromNetwork()
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
-            val jsonString = userFromNetwork.getUserData()
-
-            val gsonUtil = GsonUtil()
-            val users = gsonUtil.fromJsonToDataClass2(jsonString)
-
-            for (user in users) {
-                Log.v(TAG, "onResume: user=[${user.name}, ${user.photo}")
-            }
-        }*/
     }
 }
 

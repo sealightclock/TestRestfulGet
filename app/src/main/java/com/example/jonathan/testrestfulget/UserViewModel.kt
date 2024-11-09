@@ -3,6 +3,7 @@ package com.example.jonathan.testrestfulget
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -17,14 +18,15 @@ class UserViewModel : ViewModel() {
     lateinit var users: List<User>
 
     init {
-        loadDataFromRepository()
+        loadDataFromTest()
     }
 
-    private fun loadDataFromRepository() {
-        viewModelScope.launch(Dispatchers.IO) {
-            users = repository.getUsers()
-        }
+    // This appears to be needed to have "users" initialized
+    private fun loadDataFromTest() {
+        users = repository.getUsersFromTest()
+    }
 
+    fun loadDataFromRepository() {
         viewModelScope.launch(Dispatchers.IO) {
             users = repository.getUsersFromNetwork()
         }

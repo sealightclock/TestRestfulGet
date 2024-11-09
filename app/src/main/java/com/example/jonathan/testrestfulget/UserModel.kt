@@ -1,19 +1,17 @@
 package com.example.jonathan.testrestfulget
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
 private const val TAG = "TRST: UserModel"
+
+// Test URL:
+val url = URL("https://fake-json-api.mock.beeceptor.com/users")
 
 /**
  * Model of MVVM
@@ -26,8 +24,9 @@ data class User(val name: String, val photo: String)
 // Data repository
 
 class UserRepository {
-    fun getUsers(): List<User> {
-        Log.d(TAG, "UserRepository: getUsers")
+    // This is to test users without internet connection:
+    fun getUsersFromTest(): List<User> {
+        Log.d(TAG, "UserRepository: getUsersFromTest")
 
         return listOf(
             User("User1", "user1.jpg"),
@@ -35,15 +34,15 @@ class UserRepository {
         )
     }
 
+    // This gets users from an internet Json file:
     fun getUsersFromNetwork(): List<User> {
         Log.d(TAG, "UserRepository: getUsersFromNetwork")
-
 
         val userFromNetwork = UserFromNetwork()
         val jsonString = userFromNetwork.getUserData()
 
         val gsonUtil = GsonUtil()
-        val users = gsonUtil.fromJsonToDataClass2(jsonString)
+        val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
             Log.v(TAG, "getUsersFromNetwork: user=[${user.name}, ${user.photo}")
@@ -60,9 +59,6 @@ class UserFromNetwork {
         Log.d(TAG, "UserFromNetwork: getUserData")
 
         val response = StringBuilder()
-
-        //val url = URL("https://www.example.com/")
-        val url = URL("https://fake-json-api.mock.beeceptor.com/users")
 
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
@@ -91,8 +87,9 @@ class UserFromNetwork {
 }
 
 class GsonUtil {
-    fun fromJsonToDataClass() {
-        Log.d(TAG, "GsonUtil: fromJsonToDataClass")
+    // This is a test without internet. - Kee it:
+    fun fromJsonToDataClassTest() {
+        Log.d(TAG, "GsonUtil: fromJsonToDataClassTest")
 
         val jsonString = """
         {
@@ -104,11 +101,12 @@ class GsonUtil {
         val gson = Gson()
         val user = gson.fromJson(jsonString, User::class.java)
 
-        Log.d(TAG, "GsonUtil: fromJsonToDataClass: user.name=${user.name}, user.photo=${user.photo}")
+        Log.d(TAG, "GsonUtil: fromJsonToDataClassTest: user.name=${user.name}, user.photo=${user.photo}")
     }
 
-    fun fromJsonToDataClass2(jsonString: String): List<User> {
-        Log.d(TAG, "GsonUtil: fromJsonToDataClass2")
+    // This converts Json string to a list of Data Class object of type User:
+    fun fromJsonToDataClass(jsonString: String): List<User> {
+        Log.d(TAG, "GsonUtil: fromJsonToDataClass")
 
         val gson = Gson()
 
