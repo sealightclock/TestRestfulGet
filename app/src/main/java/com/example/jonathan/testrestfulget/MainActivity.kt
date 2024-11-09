@@ -53,11 +53,15 @@ class MainActivity : ComponentActivity() {
 
         val userFromNetwork = UserFromNetwork()
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            userFromNetwork.getUserData()
-        }
+            val jsonString = userFromNetwork.getUserData()
 
-        val gsonUtil = GsonUtil()
-        gsonUtil.fromJsonToDataClass()
+            val gsonUtil = GsonUtil()
+            val users = gsonUtil.fromJsonToDataClass2(jsonString)
+
+            for (user in users) {
+                Log.v(TAG, "onResume: user=[${user.name}, ${user.photo}")
+            }
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package com.example.jonathan.testrestfulget
 
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -33,8 +34,10 @@ class UserRepository {
 // Data from network
 
 class UserFromNetwork {
-    fun getUserData() {
+    fun getUserData(): String {
         Log.d(TAG, "UserFromNetwork: getUserData")
+
+        val response = StringBuilder()
 
         //val url = URL("https://www.example.com/")
         val url = URL("https://fake-json-api.mock.beeceptor.com/users")
@@ -47,7 +50,6 @@ class UserFromNetwork {
 
             val reader = BufferedReader(InputStreamReader(connection.inputStream))
             var line: String?
-            val response = StringBuilder()
 
             while (reader.readLine().also { line = it } != null) {
                 response.append(line)
@@ -61,6 +63,8 @@ class UserFromNetwork {
         }
 
         connection.disconnect()
+
+        return response.toString()
     }
 }
 
@@ -79,5 +83,19 @@ class GsonUtil {
         val user = gson.fromJson(jsonString, User::class.java)
 
         Log.d(TAG, "GsonUtil: fromJsonToDataClass: user.name=${user.name}, user.photo=${user.photo}")
+    }
+
+    fun fromJsonToDataClass2(jsonString: String): List<User> {
+        Log.d(TAG, "GsonUtil: fromJsonToDataClass2")
+
+        val gson = Gson()
+
+        // Define the type for the list of User objects
+        val userType = object : TypeToken<List<User>>() {}.type
+
+        // Deserialize the JSON string into a list of User objects
+        val users = gson.fromJson<List<User>>(jsonString, userType)
+
+        return users
     }
 }
