@@ -3,10 +3,7 @@ package com.example.jonathan.testrestfulget
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,20 +13,29 @@ import com.example.jonathan.testrestfulget.ui.theme.TestRestfulGetTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        //enableEdgeToEdge()
+
+        // Create ViewModel
+        val viewModel: UserViewModel by viewModels()
+
         setContent {
-            TestRestfulGetTheme {
+            /*TestRestfulGetTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
-            }
+            }*/
+
+            // Connect to View which connects to ViewModel of MVVM:
+            UserListView(viewModel)
         }
     }
 }
 
+/*
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
@@ -45,3 +51,4 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
+*/
