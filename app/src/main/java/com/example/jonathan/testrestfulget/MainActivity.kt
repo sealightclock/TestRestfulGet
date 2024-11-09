@@ -49,11 +49,15 @@ class MainActivity : ComponentActivity() {
 
         super.onResume()
 
-        // Test
+        // Tests
+
         val userFromNetwork = UserFromNetwork()
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             userFromNetwork.getUserData()
         }
+
+        val gsonUtil = GsonUtil()
+        gsonUtil.fromJsonToDataClass()
     }
 }
 

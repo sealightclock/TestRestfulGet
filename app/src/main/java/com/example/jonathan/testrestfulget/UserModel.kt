@@ -1,6 +1,7 @@
 package com.example.jonathan.testrestfulget
 
 import android.util.Log
+import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -60,5 +61,23 @@ class UserFromNetwork {
         }
 
         connection.disconnect()
+    }
+}
+
+class GsonUtil {
+    fun fromJsonToDataClass() {
+        Log.d(TAG, "GsonUtil: fromJsonToDataClass")
+
+        val jsonString = """
+        {
+            "name": "User1",
+            "photo": "user1.jpg"
+        }
+    """
+
+        val gson = Gson()
+        val user = gson.fromJson(jsonString, User::class.java)
+
+        Log.d(TAG, "GsonUtil: fromJsonToDataClass: user.name=${user.name}, user.photo=${user.photo}")
     }
 }
