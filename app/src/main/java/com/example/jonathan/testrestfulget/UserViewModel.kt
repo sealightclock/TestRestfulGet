@@ -1,14 +1,16 @@
 package com.example.jonathan.testrestfulget
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * ViewModel of MVVM
+ * This file contains the ViewModel component of MVVM
  */
+
+private const val TAG = "TRST: UserViewModel"
 
 class UserViewModel : ViewModel() {
     // Refer to the repository:
@@ -21,12 +23,17 @@ class UserViewModel : ViewModel() {
         loadDataFromTest()
     }
 
-    // This appears to be needed to have "users" initialized
+    // This provides a list of test users before the actual users are obtained from the internet.
     private fun loadDataFromTest() {
+        Log.d(TAG, "loadDataFromTest")
+
         users = repository.getUsersFromTest()
     }
 
-    fun loadDataFromRepository() {
+    // This provides a list of users from the internet, with a delay:
+    fun loadDataFromNetwork() {
+        Log.d(TAG, "loadDataFromNetwork")
+
         viewModelScope.launch(Dispatchers.IO) {
             users = repository.getUsersFromNetwork()
         }

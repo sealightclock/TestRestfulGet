@@ -8,23 +8,21 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 
-private const val TAG = "TRST: UserModel"
-
-// Test URL:
-val url = URL("https://fake-json-api.mock.beeceptor.com/users")
-
 /**
- * Model of MVVM
+ * This file contains the Model component of MVVM.
  */
 
-// Data classes
+private const val TAG = "TRST: UserModel"
 
+// Test URL - a Json file with a list of users:
+val url = URL("https://fake-json-api.mock.beeceptor.com/users")
+
+// Data classes
 data class User(val name: String, val photo: String)
 
-// Data repository
-
+// Data repository to handle data from various sources
 class UserRepository {
-    // This is to test users without internet connection:
+    // This is to provide an initial test user list before the actual one is obtained from network:
     fun getUsersFromTest(): List<User> {
         Log.d(TAG, "UserRepository: getUsersFromTest")
 
@@ -38,9 +36,11 @@ class UserRepository {
     fun getUsersFromNetwork(): List<User> {
         Log.d(TAG, "UserRepository: getUsersFromNetwork")
 
+        // Get Json string from network:
         val userFromNetwork = UserFromNetwork()
         val jsonString = userFromNetwork.getUserData()
 
+        // Convert Json string to data class objects using Gson:
         val gsonUtil = GsonUtil()
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
@@ -53,8 +53,8 @@ class UserRepository {
 }
 
 // Data from network
-
 class UserFromNetwork {
+    // This is based on internet search results:
     fun getUserData(): String {
         Log.d(TAG, "UserFromNetwork: getUserData")
 
@@ -86,34 +86,18 @@ class UserFromNetwork {
     }
 }
 
+// Gson utility class
 class GsonUtil {
-    // This is a test without internet. - Kee it:
-    fun fromJsonToDataClassTest() {
-        Log.d(TAG, "GsonUtil: fromJsonToDataClassTest")
-
-        val jsonString = """
-        {
-            "name": "User1",
-            "photo": "user1.jpg"
-        }
-    """
-
-        val gson = Gson()
-        val user = gson.fromJson(jsonString, User::class.java)
-
-        Log.d(TAG, "GsonUtil: fromJsonToDataClassTest: user.name=${user.name}, user.photo=${user.photo}")
-    }
-
     // This converts Json string to a list of Data Class object of type User:
     fun fromJsonToDataClass(jsonString: String): List<User> {
         Log.d(TAG, "GsonUtil: fromJsonToDataClass")
 
         val gson = Gson()
 
-        // Define the type for the list of User objects
+        // Define the type for the list of User objects:
         val userType = object : TypeToken<List<User>>() {}.type
 
-        // Deserialize the JSON string into a list of User objects
+        // Deserialize the JSON string into a list of User objects:
         val users = gson.fromJson<List<User>>(jsonString, userType)
 
         return users

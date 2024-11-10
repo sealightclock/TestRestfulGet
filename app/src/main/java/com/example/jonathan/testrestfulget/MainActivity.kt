@@ -9,9 +9,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/**
+ * This is a driver Activity to test RESTful GET implementation.
+ */
+
 private const val TAG = "TRST: MainActivity"
 
 class MainActivity : ComponentActivity() {
+    // Create ViewModel:
     private val viewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,23 +24,12 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        //enableEdgeToEdge()
-
-        // Refresh ViewModeL:
+        // Refresh ViewModel:
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.loadDataFromRepository()
+            viewModel.loadDataFromNetwork()
         }
-        
-        setContent {
-            /*TestRestfulGetTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }*/
 
+        setContent {
             // Connect to View which connects to ViewModel of MVVM:
             UserListView(viewModel)
         }
@@ -47,21 +41,3 @@ class MainActivity : ComponentActivity() {
         super.onResume()
     }
 }
-
-/*
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TestRestfulGetTheme {
-        Greeting("Android")
-    }
-}
-*/
