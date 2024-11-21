@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -30,7 +31,8 @@ fun UserItemView(user: User) {
 @Composable
 fun UserListView(viewModel: UserViewModel) {
     Column {
-        viewModel.users.value?.forEach { user ->
+        // Observe LiveData as a State so that the view can be recomposed:
+        viewModel.users.observeAsState().value?.forEach { user ->
             UserItemView(user)
         }
     }
