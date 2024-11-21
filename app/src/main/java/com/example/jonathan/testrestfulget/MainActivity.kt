@@ -32,11 +32,9 @@ class MainActivity : ComponentActivity() {
             viewModel.loadDataFromNetwork()
         }
 
-        // Use ViewModel:
+        // Observe ViewModel changes (for debugging purposes only):
         viewModel.users.observe(this) {
             Log.d(TAG, "onCreate: viewModel.users.observe: $it")
-
-            // How to refresh the UI?
         }
 
         setContent {

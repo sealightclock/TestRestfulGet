@@ -22,16 +22,6 @@ data class User(val name: String, val photo: String)
 
 // Data repository to handle data from various sources
 class UserRepository {
-    // This is to provide an initial test user list before the actual one is obtained from network:
-    fun getUsersFromTest(): List<User> {
-        Log.d(TAG, "UserRepository: getUsersFromTest")
-
-        return listOf(
-            User("User1", "user1.jpg"),
-            User("User2", "user2.jpg")
-        )
-    }
-
     // This gets users from an internet Json file:
     fun getUsersFromNetwork(): List<User> {
         Log.d(TAG, "UserRepository: getUsersFromNetwork")
