@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,16 +17,26 @@ private const val TAG = "TRST: MainActivity"
 
 class MainActivity : ComponentActivity() {
     // Create ViewModel:
-    private val viewModel: UserViewModel by viewModels()
+    private lateinit var viewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate")
 
         super.onCreate(savedInstanceState)
 
-        // Refresh ViewModel:
+        // Initialize ViewModel:
+        viewModel = ViewModelProvider(this)[UserViewModel::class.java]
+
+        // Update ViewModel:
         viewModel.viewModelScope.launch(Dispatchers.IO) {
             viewModel.loadDataFromNetwork()
+        }
+
+        // Use ViewModel:
+        viewModel.users.observe(this) {
+            Log.d(TAG, "onCreate: viewModel.users.observe: $it")
+
+            // How to refresh the UI?
         }
 
         setContent {

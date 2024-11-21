@@ -30,7 +30,7 @@ fun UserItemView(user: User) {
 @Composable
 fun UserListView(viewModel: UserViewModel) {
     Column {
-        viewModel.users.forEach { user ->
+        viewModel.users.value?.forEach { user ->
             UserItemView(user)
         }
     }

@@ -1,10 +1,9 @@
 package com.example.jonathan.testrestfulget
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * This file contains the ViewModel component of MVVM
@@ -17,7 +16,8 @@ class UserViewModel : ViewModel() {
     private val repository = UserRepository()
 
     // Data:
-    lateinit var users: List<User>
+    private var _users = MutableLiveData<List<User>>(emptyList())
+    var users: LiveData<List<User>> = _users
 
     init {
         loadDataFromTest()
@@ -27,15 +27,13 @@ class UserViewModel : ViewModel() {
     private fun loadDataFromTest() {
         Log.d(TAG, "loadDataFromTest")
 
-        users = repository.getUsersFromTest()
+        _users.value = repository.getUsersFromTest()
     }
 
     // This provides a list of users from the internet, with a delay:
     fun loadDataFromNetwork() {
         Log.d(TAG, "loadDataFromNetwork")
 
-        viewModelScope.launch(Dispatchers.IO) {
-            users = repository.getUsersFromNetwork()
-        }
+        _users.postValue(repository.getUsersFromNetwork())
     }
 }
