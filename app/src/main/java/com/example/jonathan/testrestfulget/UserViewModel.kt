@@ -20,7 +20,7 @@ class UserViewModel : ViewModel() {
     var users: LiveData<List<User>> = _users
 
     /**
-     * !!! Key keyward "suspend" even thought the editor suggests removing it.
+     * !!! Key keyword "suspend" even thought the editor suggests removing it.
      * Keyword 'suspend" is not required here. However, there are many advantages of using it here:
      * [1] This indicates that this function takes a long time to complete, so should be called
      *     in a coroutine with "launch".
@@ -32,9 +32,10 @@ class UserViewModel : ViewModel() {
      *         _users.postValue(newValue)
      */
     // This provides a list of users from the internet, with a delay:
+    @Suppress("RedundantSuspendModifier")
     suspend fun loadDataFromNetwork() {
         Log.d(TAG, "loadDataFromNetwork")
 
-        _users.postValue(repository.getUsersFromNetwork())
+        _users.postValue(repository.getUsersFromWebByHttpUrlConnection())
     }
 }

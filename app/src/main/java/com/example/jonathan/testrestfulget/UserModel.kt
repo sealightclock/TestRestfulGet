@@ -23,11 +23,11 @@ data class User(val name: String, val photo: String)
 // Data repository to handle data from various sources
 class UserRepository {
     // This gets users from an internet Json file:
-    fun getUsersFromNetwork(): List<User> {
-        Log.d(TAG, "UserRepository: getUsersFromNetwork")
+    fun getUsersFromWebByHttpUrlConnection(): List<User> {
+        Log.d(TAG, "UserRepository: getUsersFromWebByHttpUrlConnection")
 
         // Get Json string from network:
-        val userFromNetwork = UserFromNetwork()
+        val userFromNetwork = DataFromWebByHttpUrlConnection()
         val jsonString = userFromNetwork.getUserData()
 
         // Convert Json string to data class objects using Gson:
@@ -35,18 +35,18 @@ class UserRepository {
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
-            Log.v(TAG, "getUsersFromNetwork: user=[${user.name}, ${user.photo}")
+            Log.v(TAG, "UserRepository: getUsersFromWebByHttpUrlConnection: user=[${user.name}, ${user.photo}")
         }
 
         return users
     }
 }
 
-// Data from network
-class UserFromNetwork {
+// Data from web by HttpURLConnection
+class DataFromWebByHttpUrlConnection {
     // This is based on internet search results:
     fun getUserData(): String {
-        Log.d(TAG, "UserFromNetwork: getUserData")
+        Log.d(TAG, "DataFromWebByHttpUrlConnection: getUserData")
 
         val response = StringBuilder()
 
@@ -54,7 +54,7 @@ class UserFromNetwork {
         connection.requestMethod = "GET"
 
         if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-            Log.v(TAG, "UserFromNetwork: getUserData: HTTP_OK")
+            Log.v(TAG, "DataFromWebByHttpUrlConnection: getUserData: HTTP_OK")
 
             val reader = BufferedReader(InputStreamReader(connection.inputStream))
             var line: String?
@@ -65,9 +65,9 @@ class UserFromNetwork {
 
             reader.close()
 
-            Log.v(TAG, "UserFromNetwork: getUserData: response=\n$response")
+            Log.v(TAG, "DataFromWebByHttpUrlConnection: getUserData: response=\n$response")
         } else {
-            Log.v(TAG, "UserFromNetwork: getUserData: responseCode=\n${connection.responseCode}")
+            Log.v(TAG, "DataFromWebByHttpUrlConnection: getUserData: responseCode=\n${connection.responseCode}")
         }
 
         connection.disconnect()
