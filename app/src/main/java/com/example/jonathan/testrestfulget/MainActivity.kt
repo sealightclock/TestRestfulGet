@@ -33,8 +33,17 @@ class MainActivity : ComponentActivity() {
         }
 
         // Observe ViewModel changes (for debugging purposes only):
+        /*
         viewModel.users.observe(this) {
             Log.d(TAG, "onCreate: viewModel.users.observe: $it")
+        }
+         */
+
+        viewModel.viewModelScope.launch {
+            viewModel.users.collect { users ->
+                // Handle the new state value here
+                Log.d(TAG, "onCreate: viewModel.users.collect: $users")
+            }
         }
 
         setContent {

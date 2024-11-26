@@ -1,9 +1,9 @@
 package com.example.jonathan.testrestfulget
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * This file contains the ViewModel component of MVVM
@@ -15,9 +15,13 @@ class UserViewModel : ViewModel() {
     // Refer to the repository:
     private val repository = UserRepository()
 
-    // Data (using the MutableLiveData and LiveData pair):
+    /* // Data (using the MutableLiveData and LiveData pair, without initial value):
     private var _users = MutableLiveData<List<User>>()
-    var users: LiveData<List<User>> = _users
+    var users: LiveData<List<User>> = _users */
+
+    // Data (using the MutableStateFlow and StateFlow pair, with initial value):
+    private var _users = MutableStateFlow<List<User>>(emptyList())
+    var users: StateFlow<List<User>> = _users
 
     /**
      * !!! Key keyword "suspend" even thought the editor suggests removing it.
@@ -36,6 +40,8 @@ class UserViewModel : ViewModel() {
     suspend fun getData() {
         Log.d(TAG, "getData")
 
-        _users.postValue(repository.fetchDataFromWebByHttpUrlConnection())
+        //_users.postValue(repository.fetchDataFromWebByHttpUrlConnection())
+
+        _users.value = repository.fetchDataFromWebByHttpUrlConnection()
     }
 }
