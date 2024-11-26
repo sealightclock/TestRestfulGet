@@ -6,8 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 /**
  * This is a driver Activity to test RESTful GET implementation.
@@ -18,6 +18,7 @@ private const val TAG = "TRST: MainActivity"
 class MainActivity : ComponentActivity() {
     // Create ViewModel:
     private lateinit var viewModel: UserViewModel
+    private var dataSourceType by Delegates.notNull<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate")
@@ -26,19 +27,10 @@ class MainActivity : ComponentActivity() {
 
         // Initialize ViewModel:
         viewModel = ViewModelProvider(this)[UserViewModel::class.java]
-
-        // Update ViewModel:
-        viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.getData()
-        }
-
-        // Observe ViewModel changes (for debugging purposes only):
-        /*
-        viewModel.users.observe(this) {
-            Log.d(TAG, "onCreate: viewModel.users.observe: $it")
-        }
-         */
-
+        // Update ViewModel using the selected data source:
+        viewModel.getData(DataSourceType.WebByHttpUrlConnection)
+        dataSourceType = DataSourceType.WebByHttpUrlConnection.ordinal
+        // Observe ViewModel (for debugging purposes only):
         viewModel.viewModelScope.launch {
             viewModel.users.collect { users ->
                 // Handle the new state value here
@@ -56,5 +48,10 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "onResume")
 
         super.onResume()
+
+        // Refresh the UI, and try another way of getting data:
+        val numDataSourceTypes = DataSourceType.entries.size
+        dataSourceType = (dataSourceType + 1) % numDataSourceTypes
+        viewModel.getData(enumValues<DataSourceType>()[dataSourceType])
     }
 }

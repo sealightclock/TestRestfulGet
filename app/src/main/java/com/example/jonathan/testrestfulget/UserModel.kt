@@ -27,8 +27,19 @@ val completeUrl = URL(BASE_URL + RELATIVE_URL)
 // Data classes
 data class User(val name: String, val photo: String)
 
-// Data repository to handle data from various sources
+// Data repository to fetch data from various sources
 class UserRepository {
+    // This fetches test data without calling RESTful API, useful sometimes:
+    @Suppress("RedundantSuspendModifier")
+    suspend fun fetchDataByTest(): List<User> {
+        Log.d(TAG, "UserRepository: fetchDataByTest")
+
+        return listOf(
+            User("User1", "user1.jpg"),
+            User("User2", "user2.jpg")
+        )
+    }
+
     // This gets users from an internet Json file:
     fun fetchDataFromWebByHttpUrlConnection(): List<User> {
         Log.d(TAG, "UserRepository: fetchDataFromWebByHttpUrlConnection")
@@ -50,16 +61,16 @@ class UserRepository {
 
     // This fetches data from the web by Retrofit RESTful API:
     suspend fun fetchDataFromWebByRetrofit(): List<User> {
-        Log.d(TAG, "PostRepository: fetchDataFromWebByRetrofit")
+        Log.d(TAG, "UserRepository: fetchDataFromWebByRetrofit")
 
         val response = RetrofitInstance.retrofitApi.getUsers().awaitResponse()
 
         val newPosts = if (response.isSuccessful) {
-            Log.v(TAG, "PostRepository: fetchDataFromWebByRetrofit: response.isSuccessful")
+            Log.v(TAG, "UserRepository: fetchDataFromWebByRetrofit: response.isSuccessful")
 
             response.body() ?: emptyList()
         } else { // Handle error cases
-            Log.e(TAG, "PostRepository: fetchDataFromWebByRetrofit: response.message=[${response.message()}]")
+            Log.e(TAG, "UserRepository: fetchDataFromWebByRetrofit: response.message=[${response.message()}]")
 
             emptyList()
         }

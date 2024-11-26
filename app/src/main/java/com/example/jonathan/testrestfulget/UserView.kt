@@ -30,19 +30,9 @@ fun UserItemView(user: User) {
 // This displays a list of users:
 @Composable
 fun UserListView(viewModel: UserViewModel) {
-    /*
-    Column {
-        // Observe LiveData as a State so that the view can be recomposed:
-        viewModel.users.observeAsState().value?.forEach { user ->
-            UserItemView(user)
-        }
-    }
-     */
-
     val users = viewModel.users.collectAsState()
 
     Column {
-        // Observe LiveData as a State so that the view can be recomposed:
         users.value.forEach { user ->
             UserItemView(user)
         }

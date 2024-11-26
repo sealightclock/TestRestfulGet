@@ -2,14 +2,23 @@ package com.example.jonathan.testrestfulget
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 /**
  * This file contains the ViewModel component of MVVM
  */
 
 private const val TAG = "TRST: UserViewModel"
+
+enum class DataSourceType {
+    Test,
+    WebByHttpUrlConnection,
+    WebByRetrofit
+}
 
 class UserViewModel : ViewModel() {
     // Refer to the repository:
@@ -35,13 +44,26 @@ class UserViewModel : ViewModel() {
      *     Instead, we have to use:
      *         _users.postValue(newValue)
      */
-    // This provides a list of users from the internet, with a delay:
-    @Suppress("RedundantSuspendModifier")
-    suspend fun getData() {
-        Log.d(TAG, "getData")
+    // This get data from a specific data source:
+    //@Suppress("RedundantSuspendModifier")
+    fun getData(dataSourceType: DataSourceType) {
+        Log.d(TAG, "getData: dataSourceType=[$dataSourceType]")
 
-        //_users.postValue(repository.fetchDataFromWebByHttpUrlConnection())
+        viewModelScope.launch(Dispatchers.IO) {
+            val newUsers =
+                when (dataSourceType) {
+                    DataSourceType.Test -> repository.fetchDataByTest()
+                    DataSourceType.WebByRetrofit -> repository.fetchDataFromWebByRetrofit()
+                    DataSourceType.WebByHttpUrlConnection -> repository.fetchDataFromWebByHttpUrlConnection()
+                }
 
-        _users.value = repository.fetchDataFromWebByHttpUrlConnection()
+            // Logging:
+            newUsers.forEach { user ->
+                Log.v(TAG, "getData: dataSourceType=[$dataSourceType]: user.name=[${user.name}]")
+            }
+
+            // TODO: Try to understand why MutableStateFlow _users can be set a value directly:
+            _users.value = newUsers
+        }
     }
 }
