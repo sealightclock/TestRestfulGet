@@ -9,13 +9,19 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * This file contains the Model component of MVVM.
+ * This is the Model part of the MVVM Clean architecture.
+ * - data classes
+ * - repository to handle different data sources
  */
+
+// The complete Url is: BASE_URL + RELATIVE_URL:
+const val BASE_URL = "https://fake-json-api.mock.beeceptor.com/"
+const val RELATIVE_URL = "users"
 
 private const val TAG = "TRST: UserModel"
 
 // Test URL - a Json file with a list of users:
-val url = URL("https://fake-json-api.mock.beeceptor.com/users")
+val completeUrl = URL(BASE_URL + RELATIVE_URL)
 
 // Data classes
 data class User(val name: String, val photo: String)
@@ -50,7 +56,7 @@ class DataFromWebByHttpUrlConnection {
 
         val response = StringBuilder()
 
-        val connection = url.openConnection() as HttpURLConnection
+        val connection = completeUrl.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
 
         if (connection.responseCode == HttpURLConnection.HTTP_OK) {
