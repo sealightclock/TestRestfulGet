@@ -16,7 +16,7 @@ class UserViewModel : ViewModel() {
     private val repository = UserRepository()
 
     // Data (using the MutableLiveData and LiveData pair):
-    private var _users = MutableLiveData<List<User>>(emptyList())
+    private var _users = MutableLiveData<List<User>>()
     var users: LiveData<List<User>> = _users
 
     /**
@@ -33,9 +33,9 @@ class UserViewModel : ViewModel() {
      */
     // This provides a list of users from the internet, with a delay:
     @Suppress("RedundantSuspendModifier")
-    suspend fun loadDataFromNetwork() {
-        Log.d(TAG, "loadDataFromNetwork")
+    suspend fun getData() {
+        Log.d(TAG, "getData")
 
-        _users.postValue(repository.getUsersFromWebByHttpUrlConnection())
+        _users.postValue(repository.fetchDataFromWebByHttpUrlConnection())
     }
 }

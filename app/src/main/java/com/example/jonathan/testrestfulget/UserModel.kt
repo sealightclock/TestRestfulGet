@@ -23,19 +23,19 @@ data class User(val name: String, val photo: String)
 // Data repository to handle data from various sources
 class UserRepository {
     // This gets users from an internet Json file:
-    fun getUsersFromWebByHttpUrlConnection(): List<User> {
-        Log.d(TAG, "UserRepository: getUsersFromWebByHttpUrlConnection")
+    fun fetchDataFromWebByHttpUrlConnection(): List<User> {
+        Log.d(TAG, "UserRepository: fetchDataFromWebByHttpUrlConnection")
 
         // Get Json string from network:
         val userFromNetwork = DataFromWebByHttpUrlConnection()
-        val jsonString = userFromNetwork.getUserData()
+        val jsonString = userFromNetwork.fetchData()
 
         // Convert Json string to data class objects using Gson:
         val gsonUtil = GsonUtil()
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
-            Log.v(TAG, "UserRepository: getUsersFromWebByHttpUrlConnection: user=[${user.name}, ${user.photo}")
+            Log.v(TAG, "UserRepository: fetchDataFromWebByHttpUrlConnection: user=[${user.name}, ${user.photo}")
         }
 
         return users
@@ -45,8 +45,8 @@ class UserRepository {
 // Data from web by HttpURLConnection
 class DataFromWebByHttpUrlConnection {
     // This is based on internet search results:
-    fun getUserData(): String {
-        Log.d(TAG, "DataFromWebByHttpUrlConnection: getUserData")
+    fun fetchData(): String {
+        Log.d(TAG, "DataFromWebByHttpUrlConnection: fetchData")
 
         val response = StringBuilder()
 
@@ -54,7 +54,7 @@ class DataFromWebByHttpUrlConnection {
         connection.requestMethod = "GET"
 
         if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-            Log.v(TAG, "DataFromWebByHttpUrlConnection: getUserData: HTTP_OK")
+            Log.v(TAG, "DataFromWebByHttpUrlConnection: fetchData: HTTP_OK")
 
             val reader = BufferedReader(InputStreamReader(connection.inputStream))
             var line: String?
@@ -65,9 +65,9 @@ class DataFromWebByHttpUrlConnection {
 
             reader.close()
 
-            Log.v(TAG, "DataFromWebByHttpUrlConnection: getUserData: response=\n$response")
+            Log.v(TAG, "DataFromWebByHttpUrlConnection: fetchData: response=\n$response")
         } else {
-            Log.v(TAG, "DataFromWebByHttpUrlConnection: getUserData: responseCode=\n${connection.responseCode}")
+            Log.v(TAG, "DataFromWebByHttpUrlConnection: fetchData: responseCode=\n${connection.responseCode}")
         }
 
         connection.disconnect()

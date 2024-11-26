@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
         // Update ViewModel:
         viewModel.viewModelScope.launch(Dispatchers.IO) {
-            viewModel.loadDataFromNetwork()
+            viewModel.getData()
         }
 
         // Observe ViewModel changes (for debugging purposes only):
