@@ -3,6 +3,7 @@ package com.example.jonathan.testrestfulget
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import retrofit2.awaitResponse
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -45,6 +46,25 @@ class UserRepository {
         }
 
         return users
+    }
+
+    // This fetches data from the web by Retrofit RESTful API:
+    suspend fun fetchDataFromWebByRetrofit(): List<User> {
+        Log.d(TAG, "PostRepository: fetchDataFromWebByRetrofit")
+
+        val response = RetrofitInstance.retrofitApi.getUsers().awaitResponse()
+
+        val newPosts = if (response.isSuccessful) {
+            Log.v(TAG, "PostRepository: fetchDataFromWebByRetrofit: response.isSuccessful")
+
+            response.body() ?: emptyList()
+        } else { // Handle error cases
+            Log.e(TAG, "PostRepository: fetchDataFromWebByRetrofit: response.message=[${response.message()}]")
+
+            emptyList()
+        }
+
+        return newPosts
     }
 }
 
