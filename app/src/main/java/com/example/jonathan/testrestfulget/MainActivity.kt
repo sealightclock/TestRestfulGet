@@ -28,8 +28,8 @@ class MainActivity : ComponentActivity() {
         // Initialize ViewModel:
         viewModel = ViewModelProvider(this)[UserViewModel::class.java]
         // Update ViewModel using the selected data source:
-        viewModel.getData(DataSourceType.WebByHttpUrlConnection)
-        dataSourceType = DataSourceType.WebByHttpUrlConnection.ordinal
+        viewModel.getData(DataSourceType.Test)
+        dataSourceType = DataSourceType.Test.ordinal
         // Observe ViewModel (for debugging purposes only):
         viewModel.viewModelScope.launch {
             viewModel.users.collect { users ->

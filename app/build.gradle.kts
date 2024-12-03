@@ -61,6 +61,10 @@ dependencies {
     // Use Gson:
     implementation(libs.gson)
 
+    // Use Okhttp:
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+
     // Use Retrofit with Gson converter:
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

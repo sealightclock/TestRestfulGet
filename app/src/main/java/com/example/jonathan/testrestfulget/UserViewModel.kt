@@ -17,6 +17,7 @@ private const val TAG = "TRST: UserViewModel"
 enum class DataSourceType {
     Test,
     WebByHttpUrlConnection,
+    WebByOkhttp,
     WebByRetrofit
 }
 
@@ -53,8 +54,9 @@ class UserViewModel : ViewModel() {
             val newUsers =
                 when (dataSourceType) {
                     DataSourceType.Test -> repository.fetchDataByTest()
-                    DataSourceType.WebByRetrofit -> repository.fetchDataFromWebByRetrofit()
                     DataSourceType.WebByHttpUrlConnection -> repository.fetchDataFromWebByHttpUrlConnection()
+                    DataSourceType.WebByOkhttp -> repository.fetchDataFromWebByOkhttp()
+                    DataSourceType.WebByRetrofit -> repository.fetchDataFromWebByRetrofit()
                 }
 
             // Logging:

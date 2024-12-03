@@ -1,6 +1,7 @@
 package com.example.jonathan.testrestfulget
 
 import android.util.Log
+import com.example.jonathan.testrestfulget.model.okhttp.fetchUrl
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.awaitResponse
@@ -54,6 +55,24 @@ class UserRepository {
 
         for (user in users) {
             Log.v(TAG, "UserRepository: fetchDataFromWebByHttpUrlConnection: user=[${user.name}, ${user.photo}")
+        }
+
+        return users
+    }
+
+    // This fetches users from the web by Okhttp:
+    fun fetchDataFromWebByOkhttp(): List<User> {
+        Log.d(TAG, "UserRepository: fetchDataFromWebByOkhttp")
+
+        // Get Json string from network:
+        val jsonString = fetchUrl(completeUrl.toString())
+
+        // Convert Json string to data class objects using Gson:
+        val gsonUtil = GsonUtil()
+        val users = gsonUtil.fromJsonToDataClass(jsonString)
+
+        for (user in users) {
+            Log.v(TAG, "UserRepository: fetchDataFromWebByOkhttp: user=[${user.name}, ${user.photo}")
         }
 
         return users
