@@ -1,23 +1,26 @@
 package com.example.jonathan.testrestfulget.model.okhttp
 
+import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-// Initialize OkHttpClient
-val client = OkHttpClient()
+private const val TAG = "TRST: OkHttpClient"
 
 fun fetchUrl(url: String): String {
+    Log.d(TAG, "fetchUrl: url=[$url]")
+
     val request = Request.Builder()
         .url(url)
         .build()
 
-    client.newCall(request).execute().use { response ->
+    // Initialize OkHttpClient
+    val okHttpClient = OkHttpClient()
+
+    okHttpClient.newCall(request).execute().use { response ->
         return if (response.isSuccessful) {
-            //response.body?.string() ?: "Empty response"
-            response.toString()
+            response.body?.string() ?: "Empty response"
         } else {
-            //"Request failed: ${response.message}"
-            "Request failed"
+            "Request failed: ${response.message}"
         }
     }
 }

@@ -1,10 +1,12 @@
 package com.example.jonathan.testrestfulget.model.httpurl
 
 import android.util.Log
-import com.example.jonathan.testrestfulget.model.completeUrl
+import com.example.jonathan.testrestfulget.model.BASE_URL
+import com.example.jonathan.testrestfulget.model.RELATIVE_URL
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
+import java.net.URL
 
 private const val TAG = "TRST: HttpUrlClient"
 
@@ -15,6 +17,8 @@ class HttpUrlClient {
         Log.d(TAG, "fetchData")
 
         val response = StringBuilder()
+
+        val completeUrl = URL(BASE_URL + RELATIVE_URL)
 
         val connection = completeUrl.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"

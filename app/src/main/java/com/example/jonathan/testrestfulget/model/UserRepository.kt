@@ -4,10 +4,9 @@ import android.util.Log
 import com.example.jonathan.testrestfulget.model.httpurl.HttpUrlClient
 import com.example.jonathan.testrestfulget.model.okhttp.fetchUrl
 import com.example.jonathan.testrestfulget.model.retrofit.RetrofitInstance
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import retrofit2.awaitResponse
-import java.net.URL
+
+private const val TAG = "TRST: UserRepository"
 
 /**
  * This is the Model part of the MVVM Clean architecture.
@@ -18,11 +17,6 @@ import java.net.URL
 // The complete Url is: BASE_URL + RELATIVE_URL:
 const val BASE_URL = "https://fake-json-api.mock.beeceptor.com/"
 const val RELATIVE_URL = "users"
-
-private const val TAG = "TRST: UserRepository"
-
-// Test URL - a Json file with a list of users:
-val completeUrl = URL(BASE_URL + RELATIVE_URL)
 
 // Data repository to fetch data from various sources
 class UserRepository {
@@ -38,19 +32,22 @@ class UserRepository {
     }
 
     // This gets users from an internet Json file:
-    fun fetchDataFromWebByHttpUrlConnection(): List<User> {
-        Log.d(TAG, "fetchDataFromWebByHttpUrlConnection")
+    fun fetchDataFromWebByHttpUrl(): List<User> {
+        Log.d(TAG, "fetchDataFromWebByHttpUrl")
 
         // Get Json string from network:
         val httpUrlClient = HttpUrlClient()
+
         val jsonString = httpUrlClient.fetchData()
+
+        Log.v(TAG, "fetchDataFromWebByHttpUrl: jsonString=[$jsonString]")
 
         // Convert Json string to data class objects using Gson:
         val gsonUtil = GsonUtil()
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
-            Log.v(TAG, "fetchDataFromWebByHttpUrlConnection: user=[${user.name}, ${user.photo}")
+            Log.v(TAG, "fetchDataFromWebByHttpUrl: user=[${user.name}, ${user.photo}")
         }
 
         return users
@@ -61,7 +58,9 @@ class UserRepository {
         Log.d(TAG, "fetchDataFromWebByOkhttp")
 
         // Get Json string from network:
-        val jsonString = fetchUrl(completeUrl.toString())
+        val jsonString = fetchUrl(BASE_URL + RELATIVE_URL)
+
+        Log.v(TAG, "fetchDataFromWebByOkhttp: jsonString=[$jsonString]")
 
         // Convert Json string to data class objects using Gson:
         val gsonUtil = GsonUtil()

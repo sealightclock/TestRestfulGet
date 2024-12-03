@@ -18,7 +18,7 @@ private const val TAG = "TRST: UserViewModel"
 
 enum class DataSourceType {
     Test,
-    WebByHttpUrlConnection,
+    WebByHttpUrl,
     WebByOkhttp,
     WebByRetrofit
 }
@@ -26,10 +26,6 @@ enum class DataSourceType {
 class UserViewModel : ViewModel() {
     // Refer to the repository:
     private val repository = UserRepository()
-
-    /* // Data (using the MutableLiveData and LiveData pair, without initial value):
-    private var _users = MutableLiveData<List<User>>()
-    var users: LiveData<List<User>> = _users */
 
     // Data (using the MutableStateFlow and StateFlow pair, with initial value):
     private var _users = MutableStateFlow<List<User>>(emptyList())
@@ -56,7 +52,7 @@ class UserViewModel : ViewModel() {
             val newUsers =
                 when (dataSourceType) {
                     DataSourceType.Test -> repository.fetchDataByTest()
-                    DataSourceType.WebByHttpUrlConnection -> repository.fetchDataFromWebByHttpUrlConnection()
+                    DataSourceType.WebByHttpUrl -> repository.fetchDataFromWebByHttpUrl()
                     DataSourceType.WebByOkhttp -> repository.fetchDataFromWebByOkhttp()
                     DataSourceType.WebByRetrofit -> repository.fetchDataFromWebByRetrofit()
                 }
