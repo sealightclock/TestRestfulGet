@@ -1,5 +1,8 @@
-package com.example.jonathan.testrestfulget
+package com.example.jonathan.testrestfulget.model.retrofit
 
+import com.example.jonathan.testrestfulget.model.BASE_URL
+import com.example.jonathan.testrestfulget.model.RELATIVE_URL
+import com.example.jonathan.testrestfulget.model.User
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

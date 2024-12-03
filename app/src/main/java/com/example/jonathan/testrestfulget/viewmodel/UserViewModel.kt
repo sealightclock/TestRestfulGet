@@ -1,8 +1,10 @@
-package com.example.jonathan.testrestfulget
+package com.example.jonathan.testrestfulget.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jonathan.testrestfulget.model.User
+import com.example.jonathan.testrestfulget.model.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -6,6 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.jonathan.testrestfulget.view.UserListView
+import com.example.jonathan.testrestfulget.viewmodel.DataSourceType
+import com.example.jonathan.testrestfulget.viewmodel.UserViewModel
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 

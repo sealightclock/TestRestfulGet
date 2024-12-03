@@ -1,7 +1,8 @@
-package com.example.jonathan.testrestfulget
+package com.example.jonathan.testrestfulget.model
 
 import android.util.Log
 import com.example.jonathan.testrestfulget.model.okhttp.fetchUrl
+import com.example.jonathan.testrestfulget.model.retrofit.RetrofitInstance
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.awaitResponse
