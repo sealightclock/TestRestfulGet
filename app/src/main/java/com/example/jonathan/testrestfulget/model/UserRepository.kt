@@ -1,14 +1,12 @@
 package com.example.jonathan.testrestfulget.model
 
 import android.util.Log
+import com.example.jonathan.testrestfulget.model.httpurl.HttpUrlClient
 import com.example.jonathan.testrestfulget.model.okhttp.fetchUrl
 import com.example.jonathan.testrestfulget.model.retrofit.RetrofitInstance
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.awaitResponse
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
 
 /**
@@ -21,7 +19,7 @@ import java.net.URL
 const val BASE_URL = "https://fake-json-api.mock.beeceptor.com/"
 const val RELATIVE_URL = "users"
 
-private const val TAG = "TRST: UserModel"
+private const val TAG = "TRST: UserRepository"
 
 // Test URL - a Json file with a list of users:
 val completeUrl = URL(BASE_URL + RELATIVE_URL)
@@ -31,7 +29,7 @@ class UserRepository {
     // This fetches test data without calling RESTful API, useful sometimes:
     @Suppress("RedundantSuspendModifier")
     suspend fun fetchDataByTest(): List<User> {
-        Log.d(TAG, "UserRepository: fetchDataByTest")
+        Log.d(TAG, "fetchDataByTest")
 
         return listOf(
             User("User1", "user1.jpg"),
@@ -41,18 +39,18 @@ class UserRepository {
 
     // This gets users from an internet Json file:
     fun fetchDataFromWebByHttpUrlConnection(): List<User> {
-        Log.d(TAG, "UserRepository: fetchDataFromWebByHttpUrlConnection")
+        Log.d(TAG, "fetchDataFromWebByHttpUrlConnection")
 
         // Get Json string from network:
-        val userFromNetwork = DataFromWebByHttpUrlConnection()
-        val jsonString = userFromNetwork.fetchData()
+        val httpUrlClient = HttpUrlClient()
+        val jsonString = httpUrlClient.fetchData()
 
         // Convert Json string to data class objects using Gson:
         val gsonUtil = GsonUtil()
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
-            Log.v(TAG, "UserRepository: fetchDataFromWebByHttpUrlConnection: user=[${user.name}, ${user.photo}")
+            Log.v(TAG, "fetchDataFromWebByHttpUrlConnection: user=[${user.name}, ${user.photo}")
         }
 
         return users
@@ -60,7 +58,7 @@ class UserRepository {
 
     // This fetches users from the web by Okhttp:
     fun fetchDataFromWebByOkhttp(): List<User> {
-        Log.d(TAG, "UserRepository: fetchDataFromWebByOkhttp")
+        Log.d(TAG, "fetchDataFromWebByOkhttp")
 
         // Get Json string from network:
         val jsonString = fetchUrl(completeUrl.toString())
@@ -70,7 +68,7 @@ class UserRepository {
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
-            Log.v(TAG, "UserRepository: fetchDataFromWebByOkhttp: user=[${user.name}, ${user.photo}")
+            Log.v(TAG, "fetchDataFromWebByOkhttp: user=[${user.name}, ${user.photo}")
         }
 
         return users
@@ -78,72 +76,20 @@ class UserRepository {
 
     // This fetches data from the web by Retrofit RESTful API:
     suspend fun fetchDataFromWebByRetrofit(): List<User> {
-        Log.d(TAG, "UserRepository: fetchDataFromWebByRetrofit")
+        Log.d(TAG, "fetchDataFromWebByRetrofit")
 
         val response = RetrofitInstance.retrofitApi.getUsers().awaitResponse()
 
         val newPosts = if (response.isSuccessful) {
-            Log.v(TAG, "UserRepository: fetchDataFromWebByRetrofit: response.isSuccessful")
+            Log.v(TAG, "fetchDataFromWebByRetrofit: response.isSuccessful")
 
             response.body() ?: emptyList()
         } else { // Handle error cases
-            Log.e(TAG, "UserRepository: fetchDataFromWebByRetrofit: response.message=[${response.message()}]")
+            Log.e(TAG, "fetchDataFromWebByRetrofit: response.message=[${response.message()}]")
 
             emptyList()
         }
 
         return newPosts
-    }
-}
-
-// Data from web by HttpURLConnection
-class DataFromWebByHttpUrlConnection {
-    // This is based on internet search results:
-    fun fetchData(): String {
-        Log.d(TAG, "DataFromWebByHttpUrlConnection: fetchData")
-
-        val response = StringBuilder()
-
-        val connection = completeUrl.openConnection() as HttpURLConnection
-        connection.requestMethod = "GET"
-
-        if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-            Log.v(TAG, "DataFromWebByHttpUrlConnection: fetchData: HTTP_OK")
-
-            val reader = BufferedReader(InputStreamReader(connection.inputStream))
-            var line: String?
-
-            while (reader.readLine().also { line = it } != null) {
-                response.append(line)
-            }
-
-            reader.close()
-
-            Log.v(TAG, "DataFromWebByHttpUrlConnection: fetchData: response=\n$response")
-        } else {
-            Log.v(TAG, "DataFromWebByHttpUrlConnection: fetchData: responseCode=\n${connection.responseCode}")
-        }
-
-        connection.disconnect()
-
-        return response.toString()
-    }
-}
-
-// Gson utility class
-class GsonUtil {
-    // This converts Json string to a list of Data Class object of type User:
-    fun fromJsonToDataClass(jsonString: String): List<User> {
-        Log.d(TAG, "GsonUtil: fromJsonToDataClass")
-
-        val gson = Gson()
-
-        // Define the type for the list of User objects:
-        val userType = object : TypeToken<List<User>>() {}.type
-
-        // Deserialize the JSON string into a list of User objects:
-        val users = gson.fromJson<List<User>>(jsonString, userType)
-
-        return users
     }
 }
