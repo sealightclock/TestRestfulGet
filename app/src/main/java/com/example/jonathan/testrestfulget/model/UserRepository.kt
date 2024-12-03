@@ -26,9 +26,6 @@ private const val TAG = "TRST: UserModel"
 // Test URL - a Json file with a list of users:
 val completeUrl = URL(BASE_URL + RELATIVE_URL)
 
-// Data classes
-data class User(val name: String, val photo: String)
-
 // Data repository to fetch data from various sources
 class UserRepository {
     // This fetches test data without calling RESTful API, useful sometimes:
