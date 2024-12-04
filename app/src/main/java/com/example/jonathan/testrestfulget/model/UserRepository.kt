@@ -2,7 +2,7 @@ package com.example.jonathan.testrestfulget.model
 
 import android.util.Log
 import com.example.jonathan.testrestfulget.model.httpurl.HttpUrlClient
-import com.example.jonathan.testrestfulget.model.okhttp.fetchUrl
+import com.example.jonathan.testrestfulget.model.okhttp.OkHttpClientUtil
 import com.example.jonathan.testrestfulget.model.retrofit.RetrofitInstance
 import retrofit2.awaitResponse
 
@@ -21,21 +21,26 @@ const val RELATIVE_URL = "users"
 // Data repository to fetch data from various sources
 class UserRepository {
     // This fetches test data without calling RESTful API, useful sometimes:
-    @Suppress("RedundantSuspendModifier")
-    suspend fun fetchDataByTest(): List<User> {
+    fun fetchDataByTest(): List<User> {
         Log.d(TAG, "fetchDataByTest")
 
-        return listOf(
+        val users = listOf(
             User("User1", "user1.jpg"),
             User("User2", "user2.jpg")
         )
+
+        for (user in users) {
+            Log.v(TAG, "fetchDataByTest: user=[${user.name}, ${user.photo}")
+        }
+
+        return users
     }
 
     // This gets users from an internet Json file:
     fun fetchDataFromWebByHttpUrl(): List<User> {
         Log.d(TAG, "fetchDataFromWebByHttpUrl")
 
-        // Get Json string from network:
+        // Get Json string from web:
         val httpUrlClient = HttpUrlClient()
 
         val jsonString = httpUrlClient.fetchData()
@@ -44,6 +49,7 @@ class UserRepository {
 
         // Convert Json string to data class objects using Gson:
         val gsonUtil = GsonUtil()
+
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
@@ -57,13 +63,16 @@ class UserRepository {
     fun fetchDataFromWebByOkhttp(): List<User> {
         Log.d(TAG, "fetchDataFromWebByOkhttp")
 
-        // Get Json string from network:
-        val jsonString = fetchUrl(BASE_URL + RELATIVE_URL)
+        // Get Json string from web:
+        val okHttpClientUtil = OkHttpClientUtil()
+
+        val jsonString = okHttpClientUtil.fetchUrl(BASE_URL + RELATIVE_URL)
 
         Log.v(TAG, "fetchDataFromWebByOkhttp: jsonString=[$jsonString]")
 
         // Convert Json string to data class objects using Gson:
         val gsonUtil = GsonUtil()
+
         val users = gsonUtil.fromJsonToDataClass(jsonString)
 
         for (user in users) {
@@ -79,7 +88,7 @@ class UserRepository {
 
         val response = RetrofitInstance.retrofitApi.getUsers().awaitResponse()
 
-        val newPosts = if (response.isSuccessful) {
+        val users = if (response.isSuccessful) {
             Log.v(TAG, "fetchDataFromWebByRetrofit: response.isSuccessful")
 
             response.body() ?: emptyList()
@@ -89,6 +98,6 @@ class UserRepository {
             emptyList()
         }
 
-        return newPosts
+        return users
     }
 }
